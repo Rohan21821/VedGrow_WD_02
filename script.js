@@ -19,6 +19,9 @@ document.getElementById("historyList");
 const clearHistory =
 document.getElementById("clearHistory");
 
+const copyBtn =
+document.getElementById("copyBtn");
+
 const units = {
 
 temperature:[
@@ -134,10 +137,14 @@ output=(value-273.15)*9/5+32;
 
 if(category.value==="length"){
 
-const meter={
+const meter = {
+Millimeter:0.001,
+Centimeter:0.01,
 Meter:1,
 Kilometer:1000,
-Centimeter:0.01,
+Inch:0.0254,
+Foot:0.3048,
+Yard:0.9144,
 Mile:1609.34
 };
 
@@ -149,10 +156,13 @@ meter[toUnit.value];
 
 if(category.value==="weight"){
 
-const kg={
-Kilogram:1,
+const kg = {
+Milligram:0.000001,
 Gram:0.001,
-Pound:0.453592
+Kilogram:1,
+Pound:0.453592,
+Ounce:0.0283495,
+Ton:1000
 };
 
 output=
@@ -163,10 +173,12 @@ kg[toUnit.value];
 
 if(category.value==="area"){
 
-const area={
+const area = {
 "Square Meter":1,
 "Square Kilometer":1000000,
-"Square Foot":0.092903
+"Square Foot":0.092903,
+"Acre":4046.86,
+"Hectare":10000
 };
 
 output=
@@ -177,16 +189,32 @@ area[toUnit.value];
 
 if(category.value==="time"){
 
-const time={
+const time = {
 Second:1,
 Minute:60,
-Hour:3600
+Hour:3600,
+Day:86400,
+Week:604800
 };
 
 output=
 value*
 time[fromUnit.value]/
 time[toUnit.value];
+}
+
+if(category.value==="speed"){
+
+const speed = {
+"m/s":1,
+"km/h":0.277778,
+"mph":0.44704
+};
+
+output =
+value *
+speed[fromUnit.value] /
+speed[toUnit.value];
 }
 
 result.innerText =
@@ -301,9 +329,7 @@ convert();
 
 });
 
-document
-.getElementById("copyBtn")
-.addEventListener(
+copyBtn.addEventListener(
 "click",
 ()=>{
 
@@ -318,10 +344,12 @@ copyBtn.innerText="📋 Copy Result";
 },1500);
 });
 
-if(history.length===0){
-historyList.innerHTML=
-"<li>No recent conversions</li>";
-return;
+const history =
+JSON.parse(localStorage.getItem("history")) || [];
+
+if(history.length === 0){
+    historyList.innerHTML =
+    "<li>No recent conversions</li>";
 }
 
 inputValue.addEventListener(
